@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/page.proto";
+import "api/v1/post.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service FeedsService {
+  // pagination
+  rpc UserFeeds(UserFeedsRequest) returns (UserFeedsResponse) {
+    option (google.api.http) = {get: "/feeds/personal"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Личная лента пользователя"};
+  }
+
+  rpc TopPlacesFeeds(TopPlacesFeedsRequest) returns (TopPlacesFeedsResponse) {
+    option (google.api.http) = {get: "/feeds/top"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Посты о самых популярных местах"
+      security: {}
+    };
+  }
+}
+
+message UserFeedsRequest {
+  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+  Page page = 2;
+}
+
+message UserFeedsResponse {
+  repeated Post posts = 2;
+}
+
+message TopPlacesFeedsRequest {
+  Page page = 1;
+}
+
+message TopPlacesFeedsResponse {
+  repeated Post posts = 1;
+}

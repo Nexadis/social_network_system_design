@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service MediaService {
+  rpc LoadMedia(LoadMediaRequest) returns (LoadMediaResponse) {
+    option (google.api.http) = {
+      post: "/media/upload"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Загрузка изображений для постов"};
+  }
+}
+
+message LoadMediaRequest {
+  string type_content = 1;
+  bytes data = 2;
+  int64 user_id = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+}
+
+message LoadMediaResponse {
+  Media media = 1;
+}
+
+message Media {
+  int64 media_id = 1;
+  int64 owner_id = 2;
+
+  string url_resourse = 3;
+  string type_content = 4;
+  google.protobuf.Timestamp created_at = 5;
+}

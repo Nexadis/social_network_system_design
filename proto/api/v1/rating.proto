@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service RatingService {
+  rpc ScorePost(ScorePostRequest) returns (ScorePostResponse) {
+    option (google.api.http) = {
+      post: "/post/{post_id}/score"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Поставить оценку посту"
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc DeleteScorePost(DeleteScorePostRequest) returns (DeleteScorePostResponse) {
+    option (google.api.http) = {post: "/post/{post_id}/unscore"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удалить оценку поста"
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc RatingPost(RatingPostRequest) returns (RatingPostResponse) {
+    option (google.api.http) = {get: "/post/{post_id}/rating"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить рейтинг поста"
+
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+}
+
+message ScorePostRequest {
+  int64 post_id = 1;
+  int64 user_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+
+  // Используем int: 0 - 100 -> 0.0 - 10.0
+  int32 score = 3 [(validate.rules).int32 = {
+    gte: 0
+    lte: 100
+  }];
+}
+message ScorePostResponse {}
+
+message DeleteScorePostRequest {
+  int64 post_id = 1;
+  int64 user_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+}
+message DeleteScorePostResponse {}
+
+message RatingPostRequest {
+  int64 post_id = 1;
+}
+
+message RatingPostResponse {
+  // Используем int: 0 - 100 -> 0.0 - 10.0
+  int32 avg_rating = 1;
+}

@@ -1,0 +1,2213 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Social Network",
+    "description": "Проект, создаваемый в рамках курса по system design",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "CommentsService"
+    },
+    {
+      "name": "FeedsService"
+    },
+    {
+      "name": "MediaService"
+    },
+    {
+      "name": "PlaceService"
+    },
+    {
+      "name": "PostService"
+    },
+    {
+      "name": "RatingService"
+    },
+    {
+      "name": "SubscribeService"
+    },
+    {
+      "name": "UserService"
+    }
+  ],
+  "basePath": "/api/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/comment/{commentId}": {
+      "delete": {
+        "summary": "Удалить комментарий",
+        "operationId": "CommentsService_DeleteComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteCommentResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Вы не можете удалить этот комментарий",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - комментарий не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "deleterId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CommentsService"
+        ]
+      },
+      "patch": {
+        "summary": "Изменить комментарий к посту",
+        "operationId": "CommentsService_EditComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1EditCommentResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Вы не можете изменить этот комментарий",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - комментарий не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentsServiceEditCommentBody"
+            }
+          }
+        ],
+        "tags": [
+          "CommentsService"
+        ]
+      }
+    },
+    "/feeds/personal": {
+      "get": {
+        "summary": "Личная лента пользователя",
+        "operationId": "FeedsService_UserFeeds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UserFeedsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FeedsService"
+        ]
+      }
+    },
+    "/feeds/top": {
+      "get": {
+        "summary": "Посты о самых популярных местах",
+        "operationId": "FeedsService_TopPlacesFeeds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TopPlacesFeedsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FeedsService"
+        ],
+        "security": []
+      }
+    },
+    "/media/upload": {
+      "post": {
+        "summary": "Загрузка изображений для постов",
+        "operationId": "MediaService_LoadMedia",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoadMediaResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LoadMediaRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MediaService"
+        ]
+      }
+    },
+    "/place/top": {
+      "get": {
+        "summary": "Самые популярные места по убыванию",
+        "operationId": "PlaceService_TopPlaces",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TopPlacesResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PlaceService"
+        ],
+        "security": []
+      }
+    },
+    "/place/{placeId}": {
+      "get": {
+        "summary": "Описание места",
+        "operationId": "PlaceService_PlaceInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1PlaceInfoResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Место не найдено",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "placeId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "PlaceService"
+        ],
+        "security": []
+      }
+    },
+    "/post/create": {
+      "post": {
+        "summary": "Создать пост",
+        "operationId": "PostService_CreatePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/post/list/by-place/{placeId}": {
+      "get": {
+        "summary": "Получить посты о месте",
+        "operationId": "PostService_ListPlacePosts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPlacePostsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Место не найдено",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "placeId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ],
+        "security": []
+      }
+    },
+    "/post/list/by-user/{userId}": {
+      "get": {
+        "summary": "Получить посты пользователя",
+        "operationId": "PostService_ListUserPosts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserPostsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ],
+        "security": []
+      }
+    },
+    "/post/{postId}": {
+      "get": {
+        "summary": "Получить пост",
+        "operationId": "PostService_GetPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ],
+        "security": []
+      },
+      "delete": {
+        "summary": "Удалить пост",
+        "operationId": "PostService_DeletePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeletePostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Вы не можете удалить этот пост",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "ownerId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      },
+      "patch": {
+        "summary": "Изменить пост",
+        "operationId": "PostService_EditPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1EditPostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Вы не можете менять этот пост",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostServiceEditPostBody"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/post/{postId}/comment": {
+      "post": {
+        "summary": "Добавить комментарий к посту",
+        "operationId": "CommentsService_AddComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddCommentResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentsServiceAddCommentBody"
+            }
+          }
+        ],
+        "tags": [
+          "CommentsService"
+        ]
+      }
+    },
+    "/post/{postId}/comments": {
+      "get": {
+        "summary": "Комментарии к посту",
+        "operationId": "CommentsService_ListPostComments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPostCommentsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CommentsService"
+        ],
+        "security": []
+      }
+    },
+    "/post/{postId}/rating": {
+      "get": {
+        "summary": "Получить рейтинг поста",
+        "operationId": "RatingService_RatingPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RatingPostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "RatingService"
+        ],
+        "security": []
+      }
+    },
+    "/post/{postId}/score": {
+      "post": {
+        "summary": "Поставить оценку посту",
+        "operationId": "RatingService_ScorePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ScorePostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RatingServiceScorePostBody"
+            }
+          }
+        ],
+        "tags": [
+          "RatingService"
+        ]
+      }
+    },
+    "/post/{postId}/unscore": {
+      "post": {
+        "summary": "Удалить оценку поста",
+        "operationId": "RatingService_DeleteScorePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteScorePostResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пост не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "userId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "RatingService"
+        ]
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "summary": "Получение профиля пользователя",
+        "operationId": "UserService_UserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UserInfoResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ],
+        "security": []
+      }
+    },
+    "/user/{userId}/subscribe": {
+      "post": {
+        "summary": "Подписаться на пользователя",
+        "operationId": "SubscribeService_Subscribe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SubscribeResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "subscribeToId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "SubscribeService"
+        ]
+      }
+    },
+    "/user/{userId}/subscribers": {
+      "get": {
+        "summary": "Получить подписчиков пользователя",
+        "operationId": "SubscribeService_UserSubscribers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UserSubscribersResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SubscribeService"
+        ],
+        "security": []
+      }
+    },
+    "/user/{userId}/subscriptions": {
+      "get": {
+        "summary": "Получить подписки пользователя",
+        "operationId": "SubscribeService_UserSubscriptions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UserSubscriptionsResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page.cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SubscribeService"
+        ],
+        "security": []
+      }
+    },
+    "/user/{userId}/unsubscribe": {
+      "post": {
+        "summary": "Отписаться от пользователя",
+        "operationId": "SubscribeService_Unsubscribe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UnsubscribeResponse"
+            }
+          },
+          "400": {
+            "description": "Неправильный запрос",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - JWT token отсутствует или неправильный",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Доступ закрыт",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Not Found - Пользователь не найден",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": "User ID должен совпадать с тем, что в JWT",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "unsubscribeToId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "SubscribeService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CommentsServiceAddCommentBody": {
+      "type": "object",
+      "properties": {
+        "commentatorId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "CommentsServiceEditCommentBody": {
+      "type": "object",
+      "properties": {
+        "editorId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "PostServiceEditPostBody": {
+      "type": "object",
+      "properties": {
+        "editorId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        },
+        "placeId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "mediaUrl": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RatingServiceScorePostBody": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Используем int: 0 - 100 -\u003e 0.0 - 10.0"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1AddCommentResponse": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1Comment": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "commentatorId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "text": {
+          "type": "string"
+        },
+        "editedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1Coordinate": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "string",
+          "format": "int64"
+        },
+        "lon": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "v1CreatePostRequest": {
+      "type": "object",
+      "properties": {
+        "placeId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "creatorId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        },
+        "description": {
+          "type": "string"
+        },
+        "mediaUrl": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1CreatePostResponse": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1DeleteCommentResponse": {
+      "type": "object"
+    },
+    "v1DeletePostResponse": {
+      "type": "object"
+    },
+    "v1DeleteScorePostResponse": {
+      "type": "object"
+    },
+    "v1EditCommentResponse": {
+      "type": "object",
+      "properties": {
+        "editedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1EditPostResponse": {
+      "type": "object",
+      "properties": {
+        "editedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1GetPostResponse": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "$ref": "#/definitions/v1Post"
+        }
+      }
+    },
+    "v1ListPlacePostsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        }
+      }
+    },
+    "v1ListPostCommentsResponse": {
+      "type": "object",
+      "properties": {
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Comment"
+          }
+        }
+      }
+    },
+    "v1ListUserPostsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        }
+      }
+    },
+    "v1LoadMediaRequest": {
+      "type": "object",
+      "properties": {
+        "typeContent": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID должен совпадать с тем, что в JWT"
+        }
+      }
+    },
+    "v1LoadMediaResponse": {
+      "type": "object",
+      "properties": {
+        "media": {
+          "$ref": "#/definitions/v1Media"
+        }
+      }
+    },
+    "v1Media": {
+      "type": "object",
+      "properties": {
+        "mediaId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ownerId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "urlResourse": {
+          "type": "string"
+        },
+        "typeContent": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1Page": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Place": {
+      "type": "object",
+      "properties": {
+        "placeId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "coordinate": {
+          "$ref": "#/definitions/v1Coordinate"
+        }
+      }
+    },
+    "v1PlaceInfoResponse": {
+      "type": "object",
+      "properties": {
+        "place": {
+          "$ref": "#/definitions/v1Place"
+        }
+      }
+    },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "writerId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "placeId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "mediaUrl": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "editedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1RatingPostResponse": {
+      "type": "object",
+      "properties": {
+        "avgRating": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Используем int: 0 - 100 -\u003e 0.0 - 10.0"
+        }
+      }
+    },
+    "v1ScorePostResponse": {
+      "type": "object"
+    },
+    "v1SubscribeResponse": {
+      "type": "object"
+    },
+    "v1TopPlacesFeedsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        }
+      }
+    },
+    "v1TopPlacesResponse": {
+      "type": "object",
+      "properties": {
+        "places": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Place"
+          }
+        }
+      }
+    },
+    "v1UnsubscribeResponse": {
+      "type": "object"
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UserFeedsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        }
+      }
+    },
+    "v1UserInfoResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1UserSubscribersResponse": {
+      "type": "object",
+      "properties": {
+        "subscribers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1User"
+          }
+        }
+      }
+    },
+    "v1UserSubscriptionsResponse": {
+      "type": "object",
+      "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1User"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "cookieAuth": {
+      "type": "apiKey",
+      "description": "JWT token содержащий user_id",
+      "name": "auth_token",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "cookieAuth": []
+    }
+  ]
+}

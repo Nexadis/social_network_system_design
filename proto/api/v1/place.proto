@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/page.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service PlaceService {
+  rpc PlaceInfo(PlaceInfoRequest) returns (PlaceInfoResponse) {
+    option (google.api.http) = {get: "/place/{place_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Описание места"
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Место не найдено"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+
+  // pagination
+  rpc TopPlaces(TopPlacesRequest) returns (TopPlacesResponse) {
+    option (google.api.http) = {get: "/place/top"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Самые популярные места по убыванию"
+      security: {}
+    };
+  }
+}
+
+message PlaceInfoRequest {
+  int64 place_id = 1;
+}
+
+message PlaceInfoResponse {
+  Place place = 1;
+}
+
+message TopPlacesRequest {
+  Page page = 1;
+}
+
+message TopPlacesResponse {
+  repeated Place places = 1;
+}
+
+message Coordinate {
+  int64 lat = 1;
+  int64 lon = 2;
+}
+
+message Place {
+  int64 place_id = 1;
+  string name = 2;
+  string description = 3;
+
+  Coordinate coordinate = 4;
+}

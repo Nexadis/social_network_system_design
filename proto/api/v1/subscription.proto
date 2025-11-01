@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/page.proto";
+import "api/v1/user.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {};
+
+service SubscribeService {
+  rpc Subscribe(SubscribeRequest) returns (SubscribeResponse) {
+    option (google.api.http) = {post: "/user/{user_id}/subscribe"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Подписаться на пользователя"
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пользователь не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc Unsubscribe(UnsubscribeRequest) returns (UnsubscribeResponse) {
+    option (google.api.http) = {post: "/user/{user_id}/unsubscribe"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Отписаться от пользователя"
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пользователь не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+
+  // pagination
+  rpc UserSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse) {
+    option (google.api.http) = {get: "/user/{user_id}/subscriptions"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить подписки пользователя"
+
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пользователь не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc UserSubscribers(UserSubscribersRequest) returns (UserSubscribersResponse) {
+    option (google.api.http) = {get: "/user/{user_id}/subscribers"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить подписчиков пользователя"
+
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пользователь не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+}
+
+message SubscribeRequest {
+  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+  int64 subscribe_to_id = 2;
+}
+message SubscribeResponse {}
+
+message UnsubscribeRequest {
+  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+  int64 unsubscribe_to_id = 2;
+}
+
+message UnsubscribeResponse {}
+
+message UserSubscriptionsRequest {
+  int64 user_id = 1;
+  Page page = 2;
+}
+
+message UserSubscriptionsResponse {
+  repeated User subscriptions = 1;
+}
+
+message UserSubscribersRequest {
+  int64 user_id = 1;
+  Page page = 2;
+}
+
+message UserSubscribersResponse {
+  repeated User subscribers = 1;
+}
