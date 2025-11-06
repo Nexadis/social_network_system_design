@@ -99,7 +99,8 @@ protoc-generate: bin-deps vendor-proto
 	--grpc-gateway_opt generate_unbound_methods=true \
 	--plugin=protoc-gen-openapiv2=${BINDIR}/protoc-gen-openapiv2 \
   --openapiv2_out api/openapiv2 \
-	--openapiv2_opt allow_merge=true,merge_file_name=api.swagger.json \
+	--openapiv2_opt output_format=yaml \
+	--openapiv2_opt allow_merge=true,merge_file_name=api \
   --openapiv2_opt logtostderr=true \
 	${PROTO_PATH}/api/v1/*.proto
 	rm -rf pkg
