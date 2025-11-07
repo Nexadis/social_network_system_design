@@ -10,7 +10,7 @@ option go_package = "social_network_system_design/api/v1;api";
 
 service PlaceService {
   rpc PlaceInfo(PlaceInfoRequest) returns (PlaceInfoResponse) {
-    option (google.api.http) = {get: "/place/{place_id}"};
+    option (google.api.http) = {get: "/places/{place_id}"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Описание места"
       security: {}
@@ -27,10 +27,10 @@ service PlaceService {
   }
 
   // pagination
-  rpc TopPlaces(TopPlacesRequest) returns (TopPlacesResponse) {
-    option (google.api.http) = {get: "/place/top"};
+  rpc Places(PlacesRequest) returns (PlacesResponse) {
+    option (google.api.http) = {get: "/places"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Самые популярные места по убыванию"
+      summary: "Получение мест, отранжированных по параметру"
       security: {}
     };
   }
@@ -44,11 +44,17 @@ message PlaceInfoResponse {
   Place place = 1;
 }
 
-message TopPlacesRequest {
-  Page page = 1;
+enum PlaceSort {
+  PLACE_SORT_POPULAR = 0;
+  PLACE_SORT_NAME = 1;
 }
 
-message TopPlacesResponse {
+message PlacesRequest {
+  Page page = 1;
+  PlaceSort sorting = 2;
+}
+
+message PlacesResponse {
   repeated Place places = 1;
 }
 

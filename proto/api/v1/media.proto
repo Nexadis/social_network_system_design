@@ -11,7 +11,7 @@ option go_package = "social_network_system_design/api/v1;api";
 service MediaService {
   rpc LoadMedia(LoadMediaRequest) returns (LoadMediaResponse) {
     option (google.api.http) = {
-      post: "/media/upload"
+      post: "/media"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Загрузка изображений для постов"};

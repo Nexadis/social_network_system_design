@@ -13,14 +13,14 @@ option go_package = "social_network_system_design/api/v1;api";
 service PostService {
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {
     option (google.api.http) = {
-      post: "/post/create"
+      post: "/posts/create"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Создать пост"};
   }
   rpc EditPost(EditPostRequest) returns (EditPostResponse) {
     option (google.api.http) = {
-      patch: "/post/{post_id}"
+      patch: "/posts/{post_id}"
       body: "*"
     };
 
@@ -49,7 +49,7 @@ service PostService {
     };
   }
   rpc DeletePost(DeletePostRequest) returns (DeletePostResponse) {
-    option (google.api.http) = {delete: "/post/{post_id}"};
+    option (google.api.http) = {delete: "/posts/{post_id}"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Удалить пост"
 
@@ -76,7 +76,7 @@ service PostService {
   }
 
   rpc GetPost(GetPostRequest) returns (GetPostResponse) {
-    option (google.api.http) = {get: "/post/{post_id}"};
+    option (google.api.http) = {get: "/posts/{post_id}"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Получить пост"
@@ -94,31 +94,15 @@ service PostService {
   }
 
   // pagination
-  rpc ListUserPosts(ListUserPostsRequest) returns (ListUserPostsResponse) {
-    option (google.api.http) = {get: "/post/list/by-user/{user_id}"};
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse) {
+    option (google.api.http) = {get: "/posts"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Получить посты пользователя"
+      summary: "Получить посты по параметрам"
       security: {}
       responses: {
         key: "404"
         value: {
-          description: "Not Found - Пользователь не найден"
-          schema: {
-            json_schema: {ref: ".google.rpc.Status"}
-          }
-        }
-      }
-    };
-  }
-  rpc ListPlacePosts(ListPlacePostsRequest) returns (ListPlacePostsResponse) {
-    option (google.api.http) = {get: "/post/list/by-place/{place_id}"};
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Получить посты о месте"
-      security: {}
-      responses: {
-        key: "404"
-        value: {
-          description: "Not Found - Место не найдено"
+          description: "Not Found - Посты не найдены"
           schema: {
             json_schema: {ref: ".google.rpc.Status"}
           }
@@ -165,19 +149,24 @@ message GetPostResponse {
   Post post = 1;
 }
 
-message ListUserPostsRequest {
-  int64 user_id = 1;
-  Page page = 2;
-}
-message ListUserPostsResponse {
-  repeated Post posts = 1;
+message ListPostsRequest {
+  Page page = 1;
+
+  oneof list_by {
+    UserPosts user = 2;
+    PlacePosts place = 3;
+  }
 }
 
-message ListPlacePostsRequest {
-  int64 place_id = 1;
-  Page page = 2;
+message UserPosts {
+  int64 user_id = 1;
 }
-message ListPlacePostsResponse {
+
+message PlacePosts {
+  int64 place_id = 1;
+}
+
+message ListPostsResponse {
   repeated Post posts = 1;
 }
 

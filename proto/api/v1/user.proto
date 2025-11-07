@@ -9,7 +9,7 @@ option go_package = "social_network_system_design/api/v1;api";
 
 service UserService {
   rpc UserInfo(UserInfoRequest) returns (UserInfoResponse) {
-    option (google.api.http) = {get: "/user/{user_id}"};
+    option (google.api.http) = {get: "/users/{user_id}"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Получение профиля пользователя"
 

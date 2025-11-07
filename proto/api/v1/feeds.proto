@@ -11,33 +11,27 @@ option go_package = "social_network_system_design/api/v1;api";
 
 service FeedsService {
   // pagination
-  rpc UserFeeds(UserFeedsRequest) returns (UserFeedsResponse) {
-    option (google.api.http) = {get: "/feeds/personal"};
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Личная лента пользователя"};
-  }
-
-  rpc TopPlacesFeeds(TopPlacesFeedsRequest) returns (TopPlacesFeedsResponse) {
-    option (google.api.http) = {get: "/feeds/top"};
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Посты о самых популярных местах"
-      security: {}
-    };
+  rpc Feeds(FeedsRequest) returns (FeedsResponse) {
+    option (google.api.http) = {get: "/feeds"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Лента, для получения новостей о популярных местах параметры не используются"};
   }
 }
 
-message UserFeedsRequest {
-  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
-  Page page = 2;
-}
-
-message UserFeedsResponse {
-  repeated Post posts = 2;
-}
-
-message TopPlacesFeedsRequest {
+message FeedsRequest {
   Page page = 1;
+
+  oneof feeds_type {
+    PersonalFeeds user = 2;
+    PlacesFeeds place = 3;
+  }
 }
 
-message TopPlacesFeedsResponse {
+message FeedsResponse {
   repeated Post posts = 1;
 }
+
+message PersonalFeeds {
+  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+}
+
+message PlacesFeeds {}

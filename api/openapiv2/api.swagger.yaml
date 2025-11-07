@@ -21,7 +21,7 @@ consumes:
 produces:
   - application/json
 paths:
-  /comment/{commentId}:
+  /comments/{commentId}:
     delete:
       summary: Удалить комментарий
       operationId: CommentsService_DeleteComment
@@ -29,35 +29,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1DeleteCommentResponse"
+            $ref: '#/definitions/v1DeleteCommentResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Вы не можете удалить этот комментарий
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - комментарий не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: commentId
           in: path
@@ -79,35 +79,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1EditCommentResponse"
+            $ref: '#/definitions/v1EditCommentResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Вы не можете изменить этот комментарий
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - комментарий не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: commentId
           in: path
@@ -118,105 +118,60 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/CommentsServiceEditCommentBody"
+            $ref: '#/definitions/CommentsServiceEditCommentBody'
       tags:
         - CommentsService
-  /feeds/personal:
+  /feeds:
     get:
-      summary: Личная лента пользователя
-      operationId: FeedsService_UserFeeds
+      summary: Лента, для получения новостей о популярных местах параметры не используются
+      operationId: FeedsService_Feeds
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1UserFeedsResponse"
+            $ref: '#/definitions/v1FeedsResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: userId
+        - name: page.cursor
+          in: query
+          required: false
+          type: string
+        - name: user.userId
           description: User ID должен совпадать с тем, что в JWT
           in: query
           required: false
           type: string
           format: int64
-        - name: page.cursor
-          in: query
-          required: false
-          type: string
       tags:
         - FeedsService
-  /feeds/top:
-    get:
-      summary: Посты о самых популярных местах
-      operationId: FeedsService_TopPlacesFeeds
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1TopPlacesFeedsResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: page.cursor
-          in: query
-          required: false
-          type: string
-      tags:
-        - FeedsService
-      security: []
-  /media/upload:
+  /media:
     post:
       summary: Загрузка изображений для постов
       operationId: MediaService_LoadMedia
@@ -224,89 +179,97 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1LoadMediaResponse"
+            $ref: '#/definitions/v1LoadMediaResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: "#/definitions/v1LoadMediaRequest"
+            $ref: '#/definitions/v1LoadMediaRequest'
       tags:
         - MediaService
-  /place/top:
+  /places:
     get:
-      summary: Самые популярные места по убыванию
-      operationId: PlaceService_TopPlaces
+      summary: Получение мест, отранжированных по параметру
+      operationId: PlaceService_Places
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1TopPlacesResponse"
+            $ref: '#/definitions/v1PlacesResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: page.cursor
           in: query
           required: false
           type: string
+        - name: sorting
+          in: query
+          required: false
+          type: string
+          enum:
+            - PLACE_SORT_POPULAR
+            - PLACE_SORT_NAME
+          default: PLACE_SORT_POPULAR
       tags:
         - PlaceService
       security: []
-  /place/{placeId}:
+  /places/{placeId}:
     get:
       summary: Описание места
       operationId: PlaceService_PlaceInfo
@@ -314,35 +277,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1PlaceInfoResponse"
+            $ref: '#/definitions/v1PlaceInfoResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Место не найдено
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: placeId
           in: path
@@ -352,7 +315,62 @@ paths:
       tags:
         - PlaceService
       security: []
-  /post/create:
+  /posts:
+    get:
+      summary: Получить посты по параметрам
+      operationId: PostService_ListPosts
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListPostsResponse'
+        "400":
+          description: Неправильный запрос
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "401":
+          description: Unauthorized - JWT token отсутствует или неправильный
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "403":
+          description: Forbidden - Доступ закрыт
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "404":
+          description: Not Found - Посты не найдены
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page.cursor
+          in: query
+          required: false
+          type: string
+        - name: user.userId
+          in: query
+          required: false
+          type: string
+          format: int64
+        - name: place.placeId
+          in: query
+          required: false
+          type: string
+          format: int64
+      tags:
+        - PostService
+      security: []
+  /posts/create:
     post:
       summary: Создать пост
       operationId: PostService_CreatePost
@@ -360,144 +378,44 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1CreatePostResponse"
+            $ref: '#/definitions/v1CreatePostResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: "#/definitions/v1CreatePostRequest"
+            $ref: '#/definitions/v1CreatePostRequest'
       tags:
         - PostService
-  /post/list/by-place/{placeId}:
-    get:
-      summary: Получить посты о месте
-      operationId: PostService_ListPlacePosts
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1ListPlacePostsResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Место не найдено
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: placeId
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: page.cursor
-          in: query
-          required: false
-          type: string
-      tags:
-        - PostService
-      security: []
-  /post/list/by-user/{userId}:
-    get:
-      summary: Получить посты пользователя
-      operationId: PostService_ListUserPosts
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1ListUserPostsResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Пользователь не найден
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: page.cursor
-          in: query
-          required: false
-          type: string
-      tags:
-        - PostService
-      security: []
-  /post/{postId}:
+  /posts/{postId}:
     get:
       summary: Получить пост
       operationId: PostService_GetPost
@@ -505,35 +423,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1GetPostResponse"
+            $ref: '#/definitions/v1GetPostResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -550,35 +468,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1DeletePostResponse"
+            $ref: '#/definitions/v1DeletePostResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Вы не можете удалить этот пост
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -600,35 +518,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1EditPostResponse"
+            $ref: '#/definitions/v1EditPostResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Вы не можете менять этот пост
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -639,60 +557,10 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/PostServiceEditPostBody"
+            $ref: '#/definitions/PostServiceEditPostBody'
       tags:
         - PostService
-  /post/{postId}/comment:
-    post:
-      summary: Добавить комментарий к посту
-      operationId: CommentsService_AddComment
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1AddCommentResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Пост не найден
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CommentsServiceAddCommentBody"
-      tags:
-        - CommentsService
-  /post/{postId}/comments:
+  /posts/{postId}/comments:
     get:
       summary: Комментарии к посту
       operationId: CommentsService_ListPostComments
@@ -700,35 +568,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1ListPostCommentsResponse"
+            $ref: '#/definitions/v1ListPostCommentsResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -742,89 +610,42 @@ paths:
       tags:
         - CommentsService
       security: []
-  /post/{postId}/rating:
-    get:
-      summary: Получить рейтинг поста
-      operationId: RatingService_RatingPost
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1RatingPostResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Пост не найден
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          type: string
-          format: int64
-      tags:
-        - RatingService
-      security: []
-  /post/{postId}/score:
     post:
-      summary: Поставить оценку посту
-      operationId: RatingService_ScorePost
+      summary: Добавить комментарий к посту
+      operationId: CommentsService_AddComment
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1ScorePostResponse"
+            $ref: '#/definitions/v1AddCommentResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -835,46 +656,91 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/RatingServiceScorePostBody"
+            $ref: '#/definitions/CommentsServiceAddCommentBody'
       tags:
-        - RatingService
-  /post/{postId}/unscore:
-    post:
-      summary: Удалить оценку поста
-      operationId: RatingService_DeleteScorePost
+        - CommentsService
+  /posts/{postId}/rating:
+    get:
+      summary: Получить рейтинг поста
+      operationId: RatingService_RatingPost
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1DeleteScorePostResponse"
+            $ref: '#/definitions/v1RatingPostResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пост не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          type: string
+          format: int64
+      tags:
+        - RatingService
+      security: []
+    delete:
+      summary: Удалить оценку поста
+      operationId: RatingService_DeleteRatePost
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteRatePostResponse'
+        "400":
+          description: Неправильный запрос
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "401":
+          description: Unauthorized - JWT token отсутствует или неправильный
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "403":
+          description: Forbidden - Доступ закрыт
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "404":
+          description: Not Found - Пост не найден
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: postId
           in: path
@@ -889,7 +755,158 @@ paths:
           format: int64
       tags:
         - RatingService
-  /user/{userId}:
+    post:
+      summary: Поставить оценку посту
+      operationId: RatingService_RatePost
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RatePostResponse'
+        "400":
+          description: Неправильный запрос
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "401":
+          description: Unauthorized - JWT token отсутствует или неправильный
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "403":
+          description: Forbidden - Доступ закрыт
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "404":
+          description: Not Found - Пост не найден
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RatingServiceRatePostBody'
+      tags:
+        - RatingService
+  /users/{subscribeToId}/subscribe:
+    post:
+      summary: Подписаться на пользователя
+      operationId: SubscribeService_Subscribe
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SubscribeResponse'
+        "400":
+          description: Неправильный запрос
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "401":
+          description: Unauthorized - JWT token отсутствует или неправильный
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "403":
+          description: Forbidden - Доступ закрыт
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "404":
+          description: Not Found - Пользователь не найден
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscribeToId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: userId
+          description: User ID должен совпадать с тем, что в JWT
+          in: query
+          required: false
+          type: string
+          format: int64
+      tags:
+        - SubscribeService
+  /users/{unsubscribeToId}/subscribe:
+    delete:
+      summary: Отписаться от пользователя
+      operationId: SubscribeService_Unsubscribe
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UnsubscribeResponse'
+        "400":
+          description: Неправильный запрос
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "401":
+          description: Unauthorized - JWT token отсутствует или неправильный
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "403":
+          description: Forbidden - Доступ закрыт
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "404":
+          description: Not Found - Пользователь не найден
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rpcStatus'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: unsubscribeToId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: userId
+          description: User ID должен совпадать с тем, что в JWT
+          in: query
+          required: false
+          type: string
+          format: int64
+      tags:
+        - SubscribeService
+  /users/{userId}:
     get:
       summary: Получение профиля пользователя
       operationId: UserService_UserInfo
@@ -897,35 +914,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1UserInfoResponse"
+            $ref: '#/definitions/v1UserInfoResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пользователь не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: userId
           in: path
@@ -935,58 +952,7 @@ paths:
       tags:
         - UserService
       security: []
-  /user/{userId}/subscribe:
-    post:
-      summary: Подписаться на пользователя
-      operationId: SubscribeService_Subscribe
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1SubscribeResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Пользователь не найден
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: userId
-          description: User ID должен совпадать с тем, что в JWT
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: subscribeToId
-          in: query
-          required: false
-          type: string
-          format: int64
-      tags:
-        - SubscribeService
-  /user/{userId}/subscribers:
+  /users/{userId}/subscribers:
     get:
       summary: Получить подписчиков пользователя
       operationId: SubscribeService_UserSubscribers
@@ -994,35 +960,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1UserSubscribersResponse"
+            $ref: '#/definitions/v1UserSubscribersResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пользователь не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: userId
           in: path
@@ -1036,7 +1002,7 @@ paths:
       tags:
         - SubscribeService
       security: []
-  /user/{userId}/subscriptions:
+  /users/{userId}/subscriptions:
     get:
       summary: Получить подписки пользователя
       operationId: SubscribeService_UserSubscriptions
@@ -1044,35 +1010,35 @@ paths:
         "200":
           description: A successful response.
           schema:
-            $ref: "#/definitions/v1UserSubscriptionsResponse"
+            $ref: '#/definitions/v1UserSubscriptionsResponse'
         "400":
           description: Неправильный запрос
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "401":
           description: Unauthorized - JWT token отсутствует или неправильный
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "403":
           description: Forbidden - Доступ закрыт
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "404":
           description: Not Found - Пользователь не найден
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "429":
           description: Too Many Requests - Rate limit exceeded
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
         default:
           description: An unexpected error response.
           schema:
-            $ref: "#/definitions/rpcStatus"
+            $ref: '#/definitions/rpcStatus'
       parameters:
         - name: userId
           in: path
@@ -1086,57 +1052,6 @@ paths:
       tags:
         - SubscribeService
       security: []
-  /user/{userId}/unsubscribe:
-    post:
-      summary: Отписаться от пользователя
-      operationId: SubscribeService_Unsubscribe
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: "#/definitions/v1UnsubscribeResponse"
-        "400":
-          description: Неправильный запрос
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "401":
-          description: Unauthorized - JWT token отсутствует или неправильный
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "403":
-          description: Forbidden - Доступ закрыт
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "404":
-          description: Not Found - Пользователь не найден
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/rpcStatus"
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: "#/definitions/rpcStatus"
-      parameters:
-        - name: userId
-          description: User ID должен совпадать с тем, что в JWT
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: unsubscribeToId
-          in: query
-          required: false
-          type: string
-          format: int64
-      tags:
-        - SubscribeService
 definitions:
   CommentsServiceAddCommentBody:
     type: object
@@ -1172,21 +1087,21 @@ definitions:
         type: array
         items:
           type: string
-  RatingServiceScorePostBody:
+  RatingServiceRatePostBody:
     type: object
     properties:
       userId:
         type: string
         format: int64
         description: User ID должен совпадать с тем, что в JWT
-      score:
+      rate:
         type: integer
         format: int32
-        title: "Используем int: 0 - 100 -> 0.0 - 10.0"
+        title: 'Используем int: 0 - 100 -> 0.0 - 10.0'
   protobufAny:
     type: object
     properties:
-      "@type":
+      '@type':
         type: string
     additionalProperties: {}
   rpcStatus:
@@ -1201,7 +1116,7 @@ definitions:
         type: array
         items:
           type: object
-          $ref: "#/definitions/protobufAny"
+          $ref: '#/definitions/protobufAny'
   v1AddCommentResponse:
     type: object
     properties:
@@ -1266,7 +1181,7 @@ definitions:
     type: object
   v1DeletePostResponse:
     type: object
-  v1DeleteScorePostResponse:
+  v1DeleteRatePostResponse:
     type: object
   v1EditCommentResponse:
     type: object
@@ -1280,19 +1195,19 @@ definitions:
       editedAt:
         type: string
         format: date-time
-  v1GetPostResponse:
-    type: object
-    properties:
-      post:
-        $ref: "#/definitions/v1Post"
-  v1ListPlacePostsResponse:
+  v1FeedsResponse:
     type: object
     properties:
       posts:
         type: array
         items:
           type: object
-          $ref: "#/definitions/v1Post"
+          $ref: '#/definitions/v1Post'
+  v1GetPostResponse:
+    type: object
+    properties:
+      post:
+        $ref: '#/definitions/v1Post'
   v1ListPostCommentsResponse:
     type: object
     properties:
@@ -1300,15 +1215,15 @@ definitions:
         type: array
         items:
           type: object
-          $ref: "#/definitions/v1Comment"
-  v1ListUserPostsResponse:
+          $ref: '#/definitions/v1Comment'
+  v1ListPostsResponse:
     type: object
     properties:
       posts:
         type: array
         items:
           type: object
-          $ref: "#/definitions/v1Post"
+          $ref: '#/definitions/v1Post'
   v1LoadMediaRequest:
     type: object
     properties:
@@ -1325,7 +1240,7 @@ definitions:
     type: object
     properties:
       media:
-        $ref: "#/definitions/v1Media"
+        $ref: '#/definitions/v1Media'
   v1Media:
     type: object
     properties:
@@ -1347,6 +1262,13 @@ definitions:
     properties:
       cursor:
         type: string
+  v1PersonalFeeds:
+    type: object
+    properties:
+      userId:
+        type: string
+        format: int64
+        description: User ID должен совпадать с тем, что в JWT
   v1Place:
     type: object
     properties:
@@ -1358,12 +1280,34 @@ definitions:
       description:
         type: string
       coordinate:
-        $ref: "#/definitions/v1Coordinate"
+        $ref: '#/definitions/v1Coordinate'
   v1PlaceInfoResponse:
     type: object
     properties:
       place:
-        $ref: "#/definitions/v1Place"
+        $ref: '#/definitions/v1Place'
+  v1PlacePosts:
+    type: object
+    properties:
+      placeId:
+        type: string
+        format: int64
+  v1PlaceSort:
+    type: string
+    enum:
+      - PLACE_SORT_POPULAR
+      - PLACE_SORT_NAME
+    default: PLACE_SORT_POPULAR
+  v1PlacesFeeds:
+    type: object
+  v1PlacesResponse:
+    type: object
+    properties:
+      places:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Place'
   v1Post:
     type: object
     properties:
@@ -1388,33 +1332,17 @@ definitions:
       createdAt:
         type: string
         format: date-time
+  v1RatePostResponse:
+    type: object
   v1RatingPostResponse:
     type: object
     properties:
       avgRating:
         type: integer
         format: int32
-        title: "Используем int: 0 - 100 -> 0.0 - 10.0"
-  v1ScorePostResponse:
-    type: object
+        title: 'Используем int: 0 - 100 -> 0.0 - 10.0'
   v1SubscribeResponse:
     type: object
-  v1TopPlacesFeedsResponse:
-    type: object
-    properties:
-      posts:
-        type: array
-        items:
-          type: object
-          $ref: "#/definitions/v1Post"
-  v1TopPlacesResponse:
-    type: object
-    properties:
-      places:
-        type: array
-        items:
-          type: object
-          $ref: "#/definitions/v1Place"
   v1UnsubscribeResponse:
     type: object
   v1User:
@@ -1431,19 +1359,17 @@ definitions:
         type: string
       description:
         type: string
-  v1UserFeedsResponse:
-    type: object
-    properties:
-      posts:
-        type: array
-        items:
-          type: object
-          $ref: "#/definitions/v1Post"
   v1UserInfoResponse:
     type: object
     properties:
       user:
-        $ref: "#/definitions/v1User"
+        $ref: '#/definitions/v1User'
+  v1UserPosts:
+    type: object
+    properties:
+      userId:
+        type: string
+        format: int64
   v1UserSubscribersResponse:
     type: object
     properties:
@@ -1451,7 +1377,7 @@ definitions:
         type: array
         items:
           type: object
-          $ref: "#/definitions/v1User"
+          $ref: '#/definitions/v1User'
   v1UserSubscriptionsResponse:
     type: object
     properties:
@@ -1459,7 +1385,7 @@ definitions:
         type: array
         items:
           type: object
-          $ref: "#/definitions/v1User"
+          $ref: '#/definitions/v1User'
 securityDefinitions:
   cookieAuth:
     type: apiKey

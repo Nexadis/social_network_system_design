@@ -12,7 +12,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {};
 
 service SubscribeService {
   rpc Subscribe(SubscribeRequest) returns (SubscribeResponse) {
-    option (google.api.http) = {post: "/user/{user_id}/subscribe"};
+    option (google.api.http) = {post: "/users/{subscribe_to_id}/subscribe"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Подписаться на пользователя"
@@ -29,7 +29,7 @@ service SubscribeService {
     };
   }
   rpc Unsubscribe(UnsubscribeRequest) returns (UnsubscribeResponse) {
-    option (google.api.http) = {post: "/user/{user_id}/unsubscribe"};
+    option (google.api.http) = {delete: "/users/{unsubscribe_to_id}/subscribe"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Отписаться от пользователя"
 
@@ -47,7 +47,7 @@ service SubscribeService {
 
   // pagination
   rpc UserSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse) {
-    option (google.api.http) = {get: "/user/{user_id}/subscriptions"};
+    option (google.api.http) = {get: "/users/{user_id}/subscriptions"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Получить подписки пользователя"
 
@@ -64,7 +64,7 @@ service SubscribeService {
     };
   }
   rpc UserSubscribers(UserSubscribersRequest) returns (UserSubscribersResponse) {
-    option (google.api.http) = {get: "/user/{user_id}/subscribers"};
+    option (google.api.http) = {get: "/users/{user_id}/subscribers"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Получить подписчиков пользователя"
 

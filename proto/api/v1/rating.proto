@@ -9,9 +9,9 @@ import "validate/validate.proto";
 option go_package = "social_network_system_design/api/v1;api";
 
 service RatingService {
-  rpc ScorePost(ScorePostRequest) returns (ScorePostResponse) {
+  rpc RatePost(RatePostRequest) returns (RatePostResponse) {
     option (google.api.http) = {
-      post: "/post/{post_id}/score"
+      post: "/posts/{post_id}/rating"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -28,8 +28,9 @@ service RatingService {
       }
     };
   }
-  rpc DeleteScorePost(DeleteScorePostRequest) returns (DeleteScorePostResponse) {
-    option (google.api.http) = {post: "/post/{post_id}/unscore"};
+
+  rpc DeleteRatePost(DeleteRatePostRequest) returns (DeleteRatePostResponse) {
+    option (google.api.http) = {delete: "/posts/{post_id}/rating"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Удалить оценку поста"
 
@@ -44,8 +45,9 @@ service RatingService {
       }
     };
   }
+
   rpc RatingPost(RatingPostRequest) returns (RatingPostResponse) {
-    option (google.api.http) = {get: "/post/{post_id}/rating"};
+    option (google.api.http) = {get: "/posts/{post_id}/rating"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Получить рейтинг поста"
 
@@ -63,23 +65,23 @@ service RatingService {
   }
 }
 
-message ScorePostRequest {
+message RatePostRequest {
   int64 post_id = 1;
   int64 user_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
 
   // Используем int: 0 - 100 -> 0.0 - 10.0
-  int32 score = 3 [(validate.rules).int32 = {
+  int32 rate = 3 [(validate.rules).int32 = {
     gte: 0
     lte: 100
   }];
 }
-message ScorePostResponse {}
+message RatePostResponse {}
 
-message DeleteScorePostRequest {
+message DeleteRatePostRequest {
   int64 post_id = 1;
   int64 user_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
 }
-message DeleteScorePostResponse {}
+message DeleteRatePostResponse {}
 
 message RatingPostRequest {
   int64 post_id = 1;
