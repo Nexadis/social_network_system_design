@@ -12,7 +12,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {};
 
 service SubscribeService {
   rpc Subscribe(SubscribeRequest) returns (SubscribeResponse) {
-    option (google.api.http) = {post: "/users/{subscribe_to_id}/subscribe"};
+    option (google.api.http) = {post: "/users/{subscribe_to_id}/subscribers"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Подписаться на пользователя"
@@ -28,8 +28,9 @@ service SubscribeService {
       }
     };
   }
+
   rpc Unsubscribe(UnsubscribeRequest) returns (UnsubscribeResponse) {
-    option (google.api.http) = {delete: "/users/{unsubscribe_to_id}/subscribe"};
+    option (google.api.http) = {delete: "/users/{unsubscribe_to_id}/subscribers"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Отписаться от пользователя"
 
@@ -46,10 +47,10 @@ service SubscribeService {
   }
 
   // pagination
-  rpc UserSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse) {
-    option (google.api.http) = {get: "/users/{user_id}/subscriptions"};
+  rpc UserSubscribers(UserSubscribersRequest) returns (UserSubscribersResponse) {
+    option (google.api.http) = {get: "/users/{user_id}/subscribers"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Получить подписки пользователя"
+      summary: "Получить подписчиков пользователя"
 
       security: {}
       responses: {
@@ -63,10 +64,11 @@ service SubscribeService {
       }
     };
   }
-  rpc UserSubscribers(UserSubscribersRequest) returns (UserSubscribersResponse) {
-    option (google.api.http) = {get: "/users/{user_id}/subscribers"};
+
+  rpc UserSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse) {
+    option (google.api.http) = {get: "/users/{user_id}/subscriptions"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Получить подписчиков пользователя"
+      summary: "Получить подписки пользователя"
 
       security: {}
       responses: {

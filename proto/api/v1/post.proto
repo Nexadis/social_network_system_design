@@ -13,7 +13,7 @@ option go_package = "social_network_system_design/api/v1;api";
 service PostService {
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {
     option (google.api.http) = {
-      post: "/posts/create"
+      post: "/posts"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Создать пост"};

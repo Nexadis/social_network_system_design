@@ -370,7 +370,6 @@ paths:
       tags:
         - PostService
       security: []
-  /posts/create:
     post:
       summary: Создать пост
       operationId: PostService_CreatePost
@@ -659,7 +658,7 @@ paths:
             $ref: '#/definitions/CommentsServiceAddCommentBody'
       tags:
         - CommentsService
-  /posts/{postId}/rating:
+  /posts/{postId}/reactions:
     get:
       summary: Получить рейтинг поста
       operationId: RatingService_RatingPost
@@ -707,12 +706,12 @@ paths:
       security: []
     delete:
       summary: Удалить оценку поста
-      operationId: RatingService_DeleteRatePost
+      operationId: RatingService_DeleteReactPost
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1DeleteRatePostResponse'
+            $ref: '#/definitions/v1DeleteReactPostResponse'
         "400":
           description: Неправильный запрос
           schema:
@@ -757,12 +756,12 @@ paths:
         - RatingService
     post:
       summary: Поставить оценку посту
-      operationId: RatingService_RatePost
+      operationId: RatingService_ReactPost
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1RatePostResponse'
+            $ref: '#/definitions/v1ReactPostResponse'
         "400":
           description: Неправильный запрос
           schema:
@@ -801,10 +800,10 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/RatingServiceRatePostBody'
+            $ref: '#/definitions/RatingServiceReactPostBody'
       tags:
         - RatingService
-  /users/{subscribeToId}/subscribe:
+  /users/{subscribeToId}/subscribers:
     post:
       summary: Подписаться на пользователя
       operationId: SubscribeService_Subscribe
@@ -855,7 +854,7 @@ paths:
           format: int64
       tags:
         - SubscribeService
-  /users/{unsubscribeToId}/subscribe:
+  /users/{unsubscribeToId}/subscribers:
     delete:
       summary: Отписаться от пользователя
       operationId: SubscribeService_Unsubscribe
@@ -1087,14 +1086,14 @@ definitions:
         type: array
         items:
           type: string
-  RatingServiceRatePostBody:
+  RatingServiceReactPostBody:
     type: object
     properties:
       userId:
         type: string
         format: int64
         description: User ID должен совпадать с тем, что в JWT
-      rate:
+      reaction:
         type: integer
         format: int32
         title: 'Используем int: 0 - 100 -> 0.0 - 10.0'
@@ -1181,7 +1180,7 @@ definitions:
     type: object
   v1DeletePostResponse:
     type: object
-  v1DeleteRatePostResponse:
+  v1DeleteReactPostResponse:
     type: object
   v1EditCommentResponse:
     type: object
@@ -1332,8 +1331,6 @@ definitions:
       createdAt:
         type: string
         format: date-time
-  v1RatePostResponse:
-    type: object
   v1RatingPostResponse:
     type: object
     properties:
@@ -1341,6 +1338,8 @@ definitions:
         type: integer
         format: int32
         title: 'Используем int: 0 - 100 -> 0.0 - 10.0'
+  v1ReactPostResponse:
+    type: object
   v1SubscribeResponse:
     type: object
   v1UnsubscribeResponse:
