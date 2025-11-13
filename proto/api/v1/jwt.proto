@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+message JWTToken {
+  int64 user_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID авторизованного пользователя"}];
+}

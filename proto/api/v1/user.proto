@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service UserService {
+  rpc UserInfo(UserInfoRequest) returns (UserInfoResponse) {
+    option (google.api.http) = {get: "/users/{user_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение профиля пользователя"
+
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пользователь не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+}
+
+message UserInfoRequest {
+  int64 user_id = 1;
+}
+
+message UserInfoResponse {
+  User user = 1;
+}
+
+message User {
+  int64 user_id = 1;
+  string name = 2;
+  string surname = 3;
+  string lastname = 4;
+  string description = 5;
+}

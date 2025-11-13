@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/page.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service CommentsService {
+  rpc AddComment(AddCommentRequest) returns (AddCommentResponse) {
+    option (google.api.http) = {
+      post: "/posts/{post_id}/comments"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Добавить комментарий к посту"
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc EditComment(EditCommentRequest) returns (EditCommentResponse) {
+    option (google.api.http) = {
+      patch: "/comments/{comment_id}"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Изменить комментарий к посту"
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - комментарий не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+      responses: {
+        key: "403"
+        value: {
+          description: "Forbidden - Вы не можете изменить этот комментарий"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {
+    option (google.api.http) = {delete: "/comments/{comment_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удалить комментарий"
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - комментарий не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+      responses: {
+        key: "403"
+        value: {
+          description: "Forbidden - Вы не можете удалить этот комментарий"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+
+  // pagination
+  rpc ListPostComments(ListPostCommentsRequest) returns (ListPostCommentsResponse) {
+    option (google.api.http) = {get: "/posts/{post_id}/comments"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Комментарии к посту"
+      security: {}
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+}
+
+message AddCommentRequest {
+  int64 commentator_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+  int64 post_id = 2;
+  string text = 3;
+}
+
+message AddCommentResponse {
+  int64 comment_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+message DeleteCommentRequest {
+  int64 comment_id = 1;
+  int64 deleter_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+}
+message DeleteCommentResponse {}
+
+message EditCommentRequest {
+  int64 comment_id = 1;
+  int64 editor_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+
+  string text = 3;
+}
+message EditCommentResponse {
+  google.protobuf.Timestamp edited_at = 1;
+}
+
+message ListPostCommentsRequest {
+  int64 post_id = 1;
+  Page page = 2;
+}
+message ListPostCommentsResponse {
+  repeated Comment comments = 1;
+}
+
+message Comment {
+  int64 comment_id = 1;
+  int64 commentator_id = 2;
+
+  string text = 3;
+
+  google.protobuf.Timestamp edited_at = 4;
+  google.protobuf.Timestamp created_at = 5;
+}

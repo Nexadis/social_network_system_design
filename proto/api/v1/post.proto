@@ -1,0 +1,183 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/page.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "social_network_system_design/api/v1;api";
+
+service PostService {
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {
+    option (google.api.http) = {
+      post: "/posts"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {summary: "Создать пост"};
+  }
+  rpc EditPost(EditPostRequest) returns (EditPostResponse) {
+    option (google.api.http) = {
+      patch: "/posts/{post_id}"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Изменить пост"
+
+      responses: {
+        key: "403"
+        value: {
+          description: "Forbidden - Вы не можете менять этот пост"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse) {
+    option (google.api.http) = {delete: "/posts/{post_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удалить пост"
+
+      responses: {
+        key: "403"
+        value: {
+          description: "Forbidden - Вы не можете удалить этот пост"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+
+  rpc GetPost(GetPostRequest) returns (GetPostResponse) {
+    option (google.api.http) = {get: "/posts/{post_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить пост"
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Пост не найден"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+
+  // pagination
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse) {
+    option (google.api.http) = {get: "/posts"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить посты по параметрам"
+      security: {}
+      responses: {
+        key: "404"
+        value: {
+          description: "Not Found - Посты не найдены"
+          schema: {
+            json_schema: {ref: ".google.rpc.Status"}
+          }
+        }
+      }
+    };
+  }
+}
+
+message CreatePostRequest {
+  int64 place_id = 1;
+  int64 creator_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+
+  string description = 3 [(validate.rules).string.max_len = 500];
+  repeated string media_url = 4 [(validate.rules).repeated.max_items = 10];
+}
+message CreatePostResponse {
+  int64 post_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+message EditPostRequest {
+  int64 post_id = 1;
+  int64 editor_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+
+  int64 place_id = 3;
+  string description = 4 [(validate.rules).string.max_len = 500];
+  repeated string media_url = 5 [(validate.rules).repeated.max_items = 10];
+}
+message EditPostResponse {
+  google.protobuf.Timestamp edited_at = 1;
+}
+
+message DeletePostRequest {
+  int64 post_id = 1;
+  int64 owner_id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "User ID должен совпадать с тем, что в JWT"}];
+}
+message DeletePostResponse {}
+
+message GetPostRequest {
+  int64 post_id = 1;
+}
+message GetPostResponse {
+  Post post = 1;
+}
+
+message ListPostsRequest {
+  Page page = 1;
+
+  oneof list_by {
+    UserPosts user = 2;
+    PlacePosts place = 3;
+  }
+}
+
+message UserPosts {
+  int64 user_id = 1;
+}
+
+message PlacePosts {
+  int64 place_id = 1;
+}
+
+message ListPostsResponse {
+  repeated Post posts = 1;
+}
+
+message Post {
+  int64 post_id = 1;
+  int64 writer_id = 2;
+  int64 place_id = 3;
+
+  string description = 4;
+  repeated string media_url = 5;
+
+  google.protobuf.Timestamp edited_at = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
