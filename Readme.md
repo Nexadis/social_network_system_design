@@ -55,6 +55,7 @@
 - Максимальный объем фотографии: 5Мб
 
 Время:
+
 - Создание поста: 5 сек.
 - Добавление оценки: 3 сек.
 - Добавление комментария: 3 сек.
@@ -71,14 +72,15 @@
 - Запросов на добавление фотографии   = 1_000_000 * 1   / 86400 = 10
 - Запросов на добавление комментария  = 1_000_000 * 5   / 86400 = 50
 - Запросов на оценку поста            = 1_000_000 * 10  / 86400 = 100
-- Запросов на чтение поста            = 1_000_000 * (10 + 10) * 1  / 86400 = 200
-- Запросов на чтение фотографии       = 1_000_000 * (10 + 10) * 1  / 86400 = 200
-- Запросов на чтение комментариев     = 1_000_000 * (10 + 10) * 10 / 86400 = 2000
-- Запросов на чтение оценок поста     = 1_000_000 * (10 + 10) * 1  / 86400 = 200
+- Запросов на чтение поста            = 1_000_000 *(10 + 10)* 1  / 86400 = 200
+- Запросов на чтение фотографии       = 1_000_000 *(10 + 10)* 1  / 86400 = 200
+- Запросов на чтение комментариев     = 1_000_000 *(10 + 10)* 10 / 86400 = 2000
+- Запросов на чтение оценок поста     = 1_000_000 *(10 + 10)* 1  / 86400 = 200
 
 ##### Схемы хранения данных
 
 Пользователь:
+
 - user_id 8b
 - name 15b
 - surname 20b
@@ -88,58 +90,132 @@
 Total: 166b
 
 Подписчики:
+
+- id 8b
 - user_id 8b
 - subscriber_id 8b
 
 Пост:
+
 - post_id 8b
 - user_id 8b
 - place_id 8b
-- created_at 8b
 - description 100b
+- edited_at 8b
+- created_at 8b
 
-Total: 124b
+Total: 140b
 
 Оценка поста:
-- score_id 8b
-- post_id 8b
-- count 8b
-- score 1b (1-10)
 
-Для добавления нужен только post_id и score. 9b
-Для чтения агрегируем по post_id и выводим среднюю. 8b
-Total: 25b
+- user_id 8b
+- post_id 8b
+- reaction 1b (1-10)
+
+Total: 17b
+
+Рейтинг поста:
+
+- post_id 8b
+- total_score 8b
+- count_users 8b
+
+Total: 24b
 
 Комментарий поста:
+
 - comment_id 8b
 - post_id 8b
+- user_id 8b
 - comment 100b
+- edited_at 8b
+- created_at 8b
 
-Total: 116b
+Total: 140b
 
-Фотография поста:
-- image_id 8b
-- post_id 8b
+Загрузка фотографии:
+
+- media_id 8b
+- user_id 8b
+- url 32b
+- created_at 8b
+
+Total: 56b + загрузка в хранилище
+
+Хранилище фотографий:
+
+- url 32b
 - image 2Mb
 
 Total: 2Mb
 
+Фотография поста:
+
+- image_id 8b
+- post_id 8b
+- url 30b
+
+Total: 46b
+
 Место:
+
 - place_id 8b
-- name 100b 
+- name 80b
+- description 100b
 - coordinate 16b
-Total: 124b
+Total: 204b
 
 ##### Трафик
 
 Write:
-- Создание поста = 10 * 124 = 1 Kb/s
-- Добавление фотографии = 10 * 2Mb= 2Mb/s
-- Добавление комментариев = 50 * 116 = 5Kb/s
-- Добавление оценки = 100 * 10 = 1Kb/s
+
+- Создание поста = 10 * (140 + 46 + 24) = 2.1 Kb/s
+- Добавление фотографии = 10 * 2Mb= 2 Mb/s
+- Добавление комментариев = 50 * 140 = 7 Kb/s
+- Добавление оценки = 100 * (17 + 24) = 4.1 Kb/s
 
 Read:
-- Чтение поста = 200 * 124 = 2 Kb/s
+
+- Чтение поста = 200 * (140 + 24) = 3.2 Kb/s
 - Чтение картинок поста = 200 * 2Mb = 400Mb/s
-- Чтение комментариев = 2000 * 116 = 220 Kb/s
-- Чтение оценок = 200 * 8 = 1.6 Kb/s
+- Чтение комментариев = 2000 * 140 = 280 Kb/s
+- Чтение оценок = 200 * 24 = 4.8 Kb/s
+
+#### Диски
+
+1. Посты:
+
+- Capacity = `2.1 Kb/s * 86400 * 365` = 67 Mb
+- Disks for capacity = `67Mb / 128Gb` = 1 disk
+- Disks for throughput = `2.1 + 3.2 Kb/s / 500 Mb/s` = 1 disk
+- Disks for iops (SSD SATA) = `(200 + 10) / 1000` = 1 disk
+- Disks for iops (HDD) = `(200 + 10) / 100` = 3 disks
+- Disks = 1 SSD (SATA) disk or 3 HDD disks by 128 Gb
+
+2. Картинки:
+
+- Capacity = `2 Mb/s * 86400 * 365 = 63 Tb`
+- Disks for capacity = `63 Tb / 8 Tb` ~= 9 disks
+- Disks for throughput (SSD SATA) = `402 Mb/s / 500 Mb/s` = 1 disk
+- Disks for throughput (HDD) = `402 Mb/s / 100 Mb/s` = 5 disks
+- Disks for iops (SSD SATA) = `(200 + 10) / 1000` = 1 disk
+- Disks for iops (HDD) = `(200 + 10) / 100` = 3 disks
+- Disks = 9 HDD disks by 8 Tb
+
+3. Комментарии:
+
+- Capacity = `7 Kb/s * 86400 * 365 = 221 Gb`
+- Disks for capacity = `221 Gb / 128 Gb` = 2 disk
+- Disks for throughput = `287 Kb/s / 100 Mb/s` = 1 disk
+- Disks for iops (SSD SATA) = `(2000 + 50) / 1000` = 3 disk
+- Disks for iops (HDD) = `(2000 + 50) / 100` = 21 disks
+- Disks = 3 SSD (SATA) disks or 21 HDD disks by 128 Gb
+
+4. Оценки:
+
+- Capacity = `4 Kb/s * 86400 * 365 = 127 Gb`
+- Disks for capacity = `127 Gb / 128 Gb` = 2 disk
+- Disks for throughput = `(4.8 + 4.1) Kb/s / 100 Mb/s` = 1 disk
+- Disks for iops (SSD SATA) = `(100 + 200) / 1000` = 1 disk
+- Disks for iops (HDD) = `(100 + 200) / 100` = 4 disks
+- Disks = 1 SSD (SATA) disk by 256 Gb or 4 HDD disks by 128 Gb
