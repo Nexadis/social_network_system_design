@@ -190,7 +190,7 @@ Read:
 - Disks for throughput = `2.1 + 3.2 Kb/s / 500 Mb/s` = 1 disk
 - Disks for iops (SSD SATA) = `(200 + 10) / 1000` = 1 disk
 - Disks for iops (HDD) = `(200 + 10) / 100` = 3 disks
-- Disks = 1 SSD (SATA) disk or 3 HDD disks by 128 Gb
+- Disks = 1 SSD (SATA) disk or 3 HDD disks by 128 Gb = 1 SSD
 
 2. Картинки:
 
@@ -209,7 +209,7 @@ Read:
 - Disks for throughput = `287 Kb/s / 100 Mb/s` = 1 disk
 - Disks for iops (SSD SATA) = `(2000 + 50) / 1000` = 3 disk
 - Disks for iops (HDD) = `(2000 + 50) / 100` = 21 disks
-- Disks = 3 SSD (SATA) disks or 21 HDD disks by 128 Gb
+- Disks = 3 SSD (SATA) disks or 21 HDD disks by 128 Gb = 3 SSD
 
 4. Оценки:
 
@@ -218,4 +218,4 @@ Read:
 - Disks for throughput = `(4.8 + 4.1) Kb/s / 100 Mb/s` = 1 disk
 - Disks for iops (SSD SATA) = `(100 + 200) / 1000` = 1 disk
 - Disks for iops (HDD) = `(100 + 200) / 100` = 4 disks
-- Disks = 1 SSD (SATA) disk by 256 Gb or 4 HDD disks by 128 Gb
+- Disks = 1 SSD (SATA) disk by 256 Gb or 4 HDD disks by 128 Gb = 1 SSD
