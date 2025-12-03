@@ -205,11 +205,11 @@ Read:
 3. Комментарии:
 
 - Capacity = `7 Kb/s * 86400 * 365 = 221 Gb`
-- Disks for capacity = `221 Gb / 128 Gb` = 2 disk
+- Disks for capacity = `221 Gb / 256 Gb` = 1 disk
 - Disks for throughput = `287 Kb/s / 100 Mb/s` = 1 disk
 - Disks for iops (SSD SATA) = `(2000 + 50) / 1000` = 3 disk
 - Disks for iops (HDD) = `(2000 + 50) / 100` = 21 disks
-- Disks = 3 SSD (SATA) disks or 21 HDD disks by 128 Gb = 3 SSD
+- Disks = 3 SSD (SATA) disks or 21 HDD disks by 256 Gb = 3 SSD
 
 4. Оценки:
 
@@ -219,3 +219,36 @@ Read:
 - Disks for iops (SSD SATA) = `(100 + 200) / 1000` = 1 disk
 - Disks for iops (HDD) = `(100 + 200) / 100` = 4 disks
 - Disks = 1 SSD (SATA) disk by 256 Gb or 4 HDD disks by 128 Gb = 1 SSD
+
+#### Распределенное хранение
+
+Будем использовать **PostgreSQL** для основных таблиц с данными.
+
+##### Шардирование
+
+Используем **Consistent** шардирование, так легко и просто можно решардироваться,
+сразу выделим `2*2*3*5*7 = 420` виртуальных шардов.
+
+1. Посты шардируем по user_id
+2. Картинки шардируем по post_id
+3. Комментарии шардируем по post_id
+4. Оценки шардируем по post_id
+
+##### Реплицирование
+
+- **Async** репликация т.к. данные могут отставать и это не критично.
+- **Master-Slave** - репликации
+- **Replication Factor** = 3
+
+##### Подсчёт ресурсов
+
+1. Посты
+  Hosts = 1 disks / 1 disk per host * 3 Replication Factor (RF) = 3 hosts by 1 disks
+2. Картинки
+  Hosts = 9 disks / 2 disks per host * 3 RF = 15 hosts by 2 disks
+3. Комментарии
+  Т.к. количество дисков обусловлено высокой Read нагрузкой, то её можно снизить
+  за счёт репликации.
+  Hosts = 1 disks / 1 disks per host * 3 RF  = 3 hosts by 1 disks
+4. Оценки
+  Hosts = 1 disks / 1 disks per host * 3 RF = 3 hosts by 1 disks
