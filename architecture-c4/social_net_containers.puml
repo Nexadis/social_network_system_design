@@ -1,0 +1,92 @@
+@startuml Social Network System
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+AddRelTag("async", $lineColor="green", $lineStyle = DashedLine())
+
+Person(sysPerson, "Пользователь", "")
+System_Ext(sysJWT, "Авторизация","Получение JWT токена по логину и паролю")
+Rel_L(sysPerson,sysJWT,"Авторизация", "REST")
+
+Person_Ext(sysAdmin, "Администратор","")
+System_Ext(sysUsers,"Users Management","Система управляющая регистрацией пользователей")
+
+System_Boundary(sysSocNet, "Social Network") {
+    Container(frontend, "SPA приложение", "React/Vue/Angular", "Доступ через веб-интерфейс")
+    Container(android_app, "Android приложение", "Kotlin", "Доступ через android приложение")
+    Container(ios_app, "IOS приложение", "Swift", "Доступ через ios приложение")
+    Container(lb_gateway, "Load Balancer\ \nAPI Gateway","Go")
+
+    Rel(frontend,lb_gateway, "Использует", "REST")
+    Rel(android_app,lb_gateway, "Использует", "REST")
+    Rel(ios_app,lb_gateway, "Использует", "REST")
+
+    Container(comments, "Comments Service", "Go", "Получение, удаление, изменение комментариев")
+    Container(posts, "Posts Service", "Go", "Получение, удаление и изменение постов пользователями")
+    Container(reactions, "Reactions Service", "Go", "Оценка постов, получение оценок")
+    Container(media, "Media Service", "Go", "Загрузка и выдача медиа файлов.\nPNG, JPEG, SVG, GIF")
+    Container(feeds, "Feeds Service", "Go", "Получение постов для пользователя и постов популярных мест")
+    Container(users,"Users Service", "Go", "Подписка, отписка, получение подписчиков. \n Получение, изменение данных пользователя")
+    Container(places,"Places Service", "Go", "Получение данных о местах")
+
+    Container(feeds_aggregator,"Feeds aggregator","Go","Собирает все посты и делает ленты для пользователей")
+    
+    Rel(lb_gateway,posts,"Добавляет,изменяет, читает посты","GRPC")
+    Rel(lb_gateway,comments,"Добавляет,изменяет, читает комментарии","GRPC")
+    Rel(lb_gateway,reactions,"добавляет, удаляет реакции","GRPC")
+    Rel(lb_gateway,media,"Загружает, отдаёт медиа","GRPC")
+    Rel(lb_gateway,users,"Читает пользователей, управляет подписками","GRPC")
+
+    Rel(lb_gateway,feeds,"Читает","GRPC")
+    Rel(lb_gateway,places,"Читает","GRPC")
+
+    ContainerQueue(events_queue, "Events Queue", "Kafka", "Очередь сообщений")
+    Rel(users,events_queue,"Записывает события о пользователях (добавление/удаление)", $tags="async")
+    Rel(posts,events_queue,"Записывает события о постах (добавление/удаление)", $tags="async")
+
+    ContainerDb(places_db, "Places DB", "PostgreSQL", "Хранит информацию о местах для путешествий")
+    Rel(places,places_db, "Читает")
+
+    ContainerDb(media_s3,"Media Temporary S3","S3","Хранилище для временных загружаемых медиа файлов")
+    ContainerDb(media_tmp_db,"Media Temporary DB", "PostgreSQL", "Хранит информацию о том кто и когда загрузил файл")
+    ContainerDb(media_db,"Media DB", "PostgreSQL", "Хранит информацию о том к какому посту какой URL относится")
+
+    Rel(media,media_s3, "Записывает и выдаёт URL")
+    Rel(media,media_tmp_db,"Записывает URL от лица пользователя")
+    Rel(media,media_db,"Сохраняет")
+    
+    ContainerDb(users_db, "Users DB", "PostgreSQL", "Хранит информацию о пользователях и подписчиках")
+    Rel(users,users_db, "Читает/Записывает")
+
+    ContainerDb(comments_db,"Comments DB", "PostgreSQL", "Хранилище комментариев")
+    Rel(comments,comments_db, "Записывает/Читает")
+    
+    ContainerDb(posts_db,"Posts DB", "PostgreSQL", "Хранилище постов")
+    Rel(posts,posts_db,"Читает/Записывает")
+
+    ContainerDb(reactions_db,"Reactions DB","PostgreSQL","Хранилище оценок постов")
+    Rel(reactions,reactions_db, "Читает/Записывает")
+
+    ContainerDb(feeds_cache,"Feeds DB","Redis","Хранилище новостей")
+    
+    Rel(feeds_aggregator,feeds_cache, "Формируем новостную ленту")
+    Rel(feeds,feeds_cache,"Получаем ленту новостей")
+
+    Rel_U(events_queue, comments_db,  "Читает события о постах и пользователях", $tags="async")
+    Rel_U(events_queue, posts_db,  "Читает события о пользователях", $tags="async")
+    Rel_U(events_queue,reactions_db, "Читает события о постах", $tags="async")
+    Rel_U(events_queue, media_db,  "Читает события о постах", $tags="async")
+    Rel_U(events_queue,feeds_aggregator,"Получаем данные о новостях", $tags="async")
+}
+
+
+
+
+Rel(sysUsers, users_db, "Добавляет пользователей")
+Rel(sysAdmin, places_db, "Записывает новые места")
+
+Rel(sysPerson, frontend,"Получение доступа к сервису", "REST")
+Rel(sysPerson, android_app,"Получение доступа к сервису", "REST")
+Rel(sysPerson, ios_app,"Получение доступа к сервису", "REST")
+
+
+@enduml

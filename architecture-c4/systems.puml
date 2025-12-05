@@ -1,0 +1,14 @@
+@startuml Social Network
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(sysPerson, "Пользователь", "")
+System(sysSocialNet, "Social Network","API gateway для соц сети")
+System_Ext(extSysAuth, "Авторизация","Получение JWT токена по логину и паролю")
+Person_Ext(sysAdmin, "Администратор","")
+System_Ext(sysUsers,"Users Management","Система управляющая регистрацией пользователей")
+
+Rel(sysPerson,extSysAuth,"Запрашивает JWT по логину и паролю","REST")
+Rel(sysPerson,sysSocialNet,"Публикует посты, оставляет комментарии, запрашивает новости", "REST")
+Rel(sysAdmin,sysSocialNet,"Добавляет информацию о местах")
+Rel(sysUsers,sysSocialNet,"Добавляет пользователей при их регистрации")
+@enduml
